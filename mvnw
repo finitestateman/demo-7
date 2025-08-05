@@ -1,4 +1,5 @@
 #!/bin/sh
+export JAVA_HOME="/home/leaf/.cache/JetBrains/RemoteDev/dist/44e8a2b20f313_WebStorm-242.22855.30-aarch64/jbr"
 # ----------------------------------------------------------------------------
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
