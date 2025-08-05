@@ -33,7 +33,7 @@ public class PokemonService {
             pokemon.setWeight(pokemonDetails.getWeight());
             pokemon.setCaptureDate(pokemonDetails.getCaptureDate());
             pokemon.setStardustCost(pokemonDetails.getStardustCost());
-            pokemon.setPicture(pokemonDetails.getPicture());
+            
             return pokemonRepo.save(pokemon);
         }
         return null;

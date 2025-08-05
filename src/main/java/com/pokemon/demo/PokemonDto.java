@@ -1,8 +1,6 @@
 package com.pokemon.demo;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "pokemon")
@@ -17,17 +15,13 @@ public class PokemonDto {
     private boolean legendary;
     private double height;
     private float weight;
-    private LocalDate captureDate;
-    private BigDecimal stardustCost;
-    private byte[] picture;
-//
-//    @Version
-//    private Integer version;
+    private String captureDate;
+    private int stardustCost;
 
     public PokemonDto() {
     }
 
-    public PokemonDto(Long id, String name, String type, int hp, boolean legendary, double height, float weight, LocalDate captureDate, BigDecimal stardustCost, byte[] picture) {
+    public PokemonDto(Long id, String name, String type, int hp, boolean legendary, double height, float weight, String captureDate, int stardustCost) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -37,7 +31,6 @@ public class PokemonDto {
         this.weight = weight;
         this.captureDate = captureDate;
         this.stardustCost = stardustCost;
-        this.picture = picture;
     }
 
     public Long getId() {
@@ -96,27 +89,19 @@ public class PokemonDto {
         this.weight = weight;
     }
 
-    public LocalDate getCaptureDate() {
+    public String getCaptureDate() {
         return captureDate;
     }
 
-    public void setCaptureDate(LocalDate captureDate) {
+    public void setCaptureDate(String captureDate) {
         this.captureDate = captureDate;
     }
 
-    public BigDecimal getStardustCost() {
+    public int getStardustCost() {
         return stardustCost;
     }
 
-    public void setStardustCost(BigDecimal stardustCost) {
+    public void setStardustCost(int stardustCost) {
         this.stardustCost = stardustCost;
-    }
-
-    public byte[] getPicture() {
-        return picture;
-    }
-
-    public void setPicture(byte[] picture) {
-        this.picture = picture;
     }
 }
