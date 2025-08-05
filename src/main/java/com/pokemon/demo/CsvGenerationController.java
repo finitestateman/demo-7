@@ -1,5 +1,6 @@
 package com.pokemon.demo;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import com.github.javafaker.Faker;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,13 +15,13 @@ import java.io.Writer;
 public class CsvGenerationController {
 
     @GetMapping("/generate")
-    public void generateCsv(Writer writer) throws IOException {
+    public void generateCsv(Writer writer, @RequestParam(defaultValue = "100") int count) throws IOException {
         Faker faker = new Faker();
         try (PrintWriter printWriter = new PrintWriter(writer)) {
             // Header
             printWriter.println("id,name,type,hp,legendary,height,weight,captureDate,stardustCost");
             // Data
-            for (int i = 0; i < 100_00; i++) {
+            for (int i = 0; i < count; i++) {
                 PokemonDto pokemon = new PokemonDto(
                         (long) i,
                         faker.pokemon().name(),

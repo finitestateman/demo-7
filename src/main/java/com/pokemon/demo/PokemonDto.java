@@ -104,4 +104,13 @@ public class PokemonDto {
     public void setStardustCost(int stardustCost) {
         this.stardustCost = stardustCost;
     }
+
+    @Override
+    public String toString() {
+        return "PokemonDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                '}';
+    }
 }

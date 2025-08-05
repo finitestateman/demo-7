@@ -29,17 +29,17 @@ public class CsvService {
     @Autowired
     private JobStatusRepo jobStatusRepo;
 
-    public void processCsvFiles(List<String> filePaths) {
+    public void processCsvFiles(List<String> filePaths, int count) {
         for (String filePath : filePaths) {
-            processFile(filePath);
+            processFile(filePath, count);
         }
     }
 
     @Async
     @Transactional
-    public void processFile(String filePath) {
+    public void processFile(String filePath, int count) {
         boolean success = false;
-        try (BufferedReader reader = getReaderForFile(filePath)) {
+        try (BufferedReader reader = getReaderForFile(filePath, count)) {
             List<PokemonDto> batch = new ArrayList<>();
             reader.readLine(); // Skip header
             String line;
@@ -60,8 +60,7 @@ public class CsvService {
                 if (batch.size() >= 100) {
                     pokemonRepo.saveAll(batch);
                     batch.clear();
-                    log.info(pokemon.getName());
-                    log.info("Processed batch of 100 Pokémon from file: " + filePath);
+                    log.info(pokemon.toString());
                 }
             }
             if (!batch.isEmpty()) {
@@ -76,12 +75,12 @@ public class CsvService {
         }
     }
 
-    private BufferedReader getReaderForFile(String filePath) throws IOException {
+    private BufferedReader getReaderForFile(String filePath, int count) throws IOException {
         if (new java.io.File(filePath).exists()) {
             return new BufferedReader(new FileReader(filePath));
         } else {
             // Assuming the C# server is running on localhost:5000
-            URL url = new URL("http://localhost:8080/csv/generate");
+            URL url = new URL("http://localhost:8080/csv/generate?count=" + count);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             return new BufferedReader(new InputStreamReader(con.getInputStream()));

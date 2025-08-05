@@ -1,5 +1,6 @@
 package com.pokemon.demo;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,9 +17,9 @@ public class CsvController {
     @Autowired
     private CsvService csvService;
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadCsvFiles(@RequestBody List<String> filePaths) {
-        csvService.processCsvFiles(filePaths);
+    @PostMapping("/upload/{count}")
+    public ResponseEntity<String> uploadCsvFiles(@RequestBody List<String> filePaths, @PathVariable int count) {
+        csvService.processCsvFiles(filePaths, count);
         return ResponseEntity.ok("CSV file list received successfully.");
     }
 }
