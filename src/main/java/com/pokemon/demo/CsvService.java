@@ -7,13 +7,14 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.web.reactive.function.client.WebClient;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.URL;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,9 @@ public class CsvService {
 
     @Autowired
     private JobStatusRepo jobStatusRepo;
+    
+    @Autowired
+    private WebClient.Builder webClientBuilder;
 
     public void processCsvFiles(List<String> filePaths, int count) {
         for (String filePath : filePaths) {
@@ -57,7 +61,7 @@ public class CsvService {
                 pokemon.setStardustCost(Integer.parseInt(data[8]));
                 batch.add(pokemon);
 
-                if (batch.size() >= 100) {
+                if (batch.size() >= 10000) {
                     pokemonRepo.saveAll(batch);
                     batch.clear();
                     log.info(pokemon.toString());
@@ -79,11 +83,13 @@ public class CsvService {
         if (new java.io.File(filePath).exists()) {
             return new BufferedReader(new FileReader(filePath));
         } else {
-            // Assuming the C# server is running on localhost:5000
-            URL url = new URL("http://localhost:8080/csv/generate?count=" + count);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            return new BufferedReader(new InputStreamReader(con.getInputStream()));
+            WebClient webClient = webClientBuilder.baseUrl("http://localhost:8080").build();
+            return webClient.get()
+                    .uri(uriBuilder -> uriBuilder.path("/csv/generate").queryParam("count", count).build())
+                    .retrieve()
+                    .bodyToMono(org.springframework.core.io.buffer.DataBuffer.class)
+                    .map(dataBuffer -> new BufferedReader(new java.io.InputStreamReader(dataBuffer.asInputStream())))
+                    .block();
         }
     }
 }
